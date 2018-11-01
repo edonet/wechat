@@ -22,9 +22,9 @@ import script from '@arted/web/script';
  * 启动微信【sdk】
  *****************************************
  */
-async function start({ api = '/api/wechat/config', jsApiList = [], debug = true } = {}) {
+async function start({ url = '/api/wechat/config', api = [], debug = true } = {}) {
     let [options] = await Promise.all([
-            ajax.post(api, { url: location.href.split('#')[0] }),
+            ajax.post(url, { url: location.href.split('#')[0] }),
             script('//res.wx.qq.com/open/js/jweixin-1.4.0.js')
         ]),
         deferred = defer(),
@@ -32,12 +32,30 @@ async function start({ api = '/api/wechat/config', jsApiList = [], debug = true 
 
     // 初始化配置
     if (wx) {
+        let jsApiList = [];
+
+        // 生成【api】列表
+        api.forEach(name => {
+            switch (name) {
+                case 'share':
+                    jsApiList.push(
+                        'updateAppMessageShareData',
+                        'updateTimelineShareData',
+                        'onMenuShareWeibo',
+                        'onMenuShareQZone'
+                    );
+                    break;
+                default:
+                    jsApiList.push(name);
+                    break;
+            }
+        });
 
         // 启动配置
         wx.config({ debug, jsApiList, ...options });
 
         // 监听回调
-        wx.ready(() => deferred.resolve(wx));
+        wx.ready(() => deferred.resolve(Object.create(wx)));
         wx.error(deferred.reject);
     }
 
@@ -74,5 +92,21 @@ export default async function load(options) {
     }
 
     // 返回结果
-    return load.result;
+    return Object.assign(load.result, { share });
+}
+
+
+/**
+ *****************************************
+ * 分享配置
+ *****************************************
+ */
+export function share(options) {
+    let wx = load.result;
+
+    // 添加回调
+    wx.updateAppMessageShareData(options);
+    wx.updateTimelineShareData(options);
+    wx.onMenuShareWeibo(options);
+    wx.onMenuShareQZone(options);
 }
