@@ -1,0 +1,12 @@
+{
+  "name": "@arted/wechat",
+  "version": "0.0.1",
+  "description": "Wechat api for web and nodejs",
+  "main": "index.js",
+  "repository": "git@github.com:edonet/wechat.git",
+  "author": "edonet <edonet@163.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@arted/node": "^0.0.101"
+  }
+}
