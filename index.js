@@ -82,8 +82,8 @@ export function isWeChat() {
 export default async function load(options) {
 
     // 判断是否在微信浏览器
-    if (!isWeChat) {
-        throw new Error('请在微信浏览器中使用些接口');
+    if (!isWeChat()) {
+        throw new Error('只能在微信浏览器中使用此接口');
     }
 
     // 加载配置
