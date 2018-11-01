@@ -32,7 +32,13 @@ async function start({ url = '/api/wechat/config', api = [], debug = true } = {}
 
     // 初始化配置
     if (wx) {
-        let jsApiList = [];
+        let jsApiList = [
+                'closeWindow',
+                'hideMenuItems',
+                'showMenuItems',
+                'hideAllNonBaseMenuItem',
+                'showAllNonBaseMenuItem'
+            ];
 
         // 生成【api】列表
         api.forEach(name => {
